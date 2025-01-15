@@ -107,7 +107,7 @@ public final class PayOnlineStrategy implements TransactionStrategy {
                         );
 
                         if (cashback > 0) {
-                            account.addAmount(Math.round(cashback * 100.0) / 100.0);
+                            account.addAmount(cashback);
                         }
                     }
 

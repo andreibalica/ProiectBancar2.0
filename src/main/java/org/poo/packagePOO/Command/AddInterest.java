@@ -49,8 +49,8 @@ public final class AddInterest implements Command {
             account.addTransactionHistory(
                     TransactionFactory.createInterestTransaction(
                             timestamp,
-                            "Interest added: " + interestAmount + " "
-                                    + account.getCurrency(),
+                            account.getCurrency(),
+                            "Interest rate income",
                             interestAmount
                     )
             );

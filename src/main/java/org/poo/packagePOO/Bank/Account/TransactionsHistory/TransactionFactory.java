@@ -91,7 +91,6 @@ public final class TransactionFactory {
      *
      * @param timestamp
      * @param totalAmount
-     * @param amount
      * @param currency
      * @param accounts
      * @param error
@@ -99,12 +98,18 @@ public final class TransactionFactory {
      */
     public static TransactionHistory createSplitPaymentTransaction(final int timestamp,
                                                                    final double totalAmount,
-                                                                   final double amount,
                                                                    final String currency,
                                                                    final ArrayList<String> accounts,
-                                                                   final String error) {
-        return new SplitPaymentsTransaction(timestamp, totalAmount,
-                amount, currency, accounts, error);
+                                                                   final String error,
+                                                                   final String splitPaymentType,
+                                                                   final ArrayList<Double> amountForUsers) {
+        return new SplitPaymentsTransaction(timestamp,
+                totalAmount,
+                currency,
+                accounts,
+                error,
+                splitPaymentType,
+                amountForUsers);
     }
 
     /**
@@ -115,10 +120,12 @@ public final class TransactionFactory {
      * @return
      */
     public static TransactionHistory createInterestTransaction(final int timestamp,
+                                                               final String currency,
                                                                final String description,
                                                                final double amount) {
-        return new InterestTransaction(timestamp, description, amount);
+        return new InterestTransaction(timestamp, currency, description, amount);
     }
+
 
     /**
      *

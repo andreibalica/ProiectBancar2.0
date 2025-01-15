@@ -83,7 +83,6 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
                 if (!account.getCurrency().equals("RON")) {
                     convertedFee = CurrencyConverter.getConverter()
                             .convert("RON", account.getCurrency(), upgradeFee);
-                    convertedFee = Math.round(convertedFee * 100.0) / 100.0;
                 }
 
                 ServicePlan newPlan;

@@ -13,34 +13,31 @@ public final class SplitPayments implements Command {
     private final int timestamp;
     private final String currency;
     private final double amount;
+    private final ArrayList<Double> amountForUsers;
+    private final String splitPaymentType;
 
-    /**
-     *
-     * @param accounts
-     * @param timestamp
-     * @param currency
-     * @param amount
-     */
     public SplitPayments(final ArrayList<String> accounts,
                          final int timestamp,
                          final String currency,
-                         final double amount) {
+                         final double amount,
+                         final ArrayList<Double> amountForUsers,
+                         final String splitPaymentType) {
         this.accounts = accounts;
         this.timestamp = timestamp;
         this.currency = currency;
         this.amount = amount;
+        this.amountForUsers = amountForUsers;
+        this.splitPaymentType = splitPaymentType;
         strategy = new SplitPaymentsStrategy(
                 accounts,
                 amount,
                 currency,
-                timestamp
+                timestamp,
+                amountForUsers,
+                splitPaymentType
         );
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public void execute() {
         if ((!strategy.validate() || !strategy.process())

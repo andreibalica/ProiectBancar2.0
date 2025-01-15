@@ -99,8 +99,7 @@ public final class CurrencyConverter {
                     path.put(nextCurrency, current);
 
                     if (nextCurrency.equals(to)) {
-                        double convertedAmount = amount * rates.get(to);
-                        return Math.round(convertedAmount * 100.0) / 100.0;
+                        return amount * rates.get(to);
                     }
                 }
             }

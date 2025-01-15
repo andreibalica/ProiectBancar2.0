@@ -127,12 +127,10 @@ public final class BankAccount {
 
     public void addAmount(final double amount) {
         balance += amount;
-        balance = Math.round(balance * 100.0) / 100.0;
     }
 
     public void payAmount(final double amount) {
         balance -= amount;
-        balance = Math.round(balance * 100.0) / 100.0;
     }
 
     public void addCard(final Card card) {
@@ -174,9 +172,10 @@ public final class BankAccount {
         if (!accountType.equals("savings")) {
             throw new IllegalStateException("This is not a savings account");
         }
-        double interestAmount = balance * (interestRate / 100.0);
+        double interestAmount = balance * interestRate;
         balance += interestAmount;
     }
+
 
     public void setMinBalance(final double minBalance) {
         this.minBalance = minBalance;

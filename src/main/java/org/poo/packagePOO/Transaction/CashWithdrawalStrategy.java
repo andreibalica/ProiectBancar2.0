@@ -70,9 +70,6 @@ public class CashWithdrawalStrategy implements TransactionStrategy {
         double commission = user.getServicePlan()
                 .calculateCommission(withdrawalInAccountCurrency, account.getCurrency());
 
-        withdrawalInAccountCurrency = Math.round(withdrawalInAccountCurrency * 100.0) / 100.0;
-        commission = Math.round(commission * 100.0) / 100.0;
-
         if (account.getBalance() < withdrawalInAccountCurrency + commission) {
             account.addTransactionHistory(TransactionFactory
                     .createErrorTransaction(timestamp, "Insufficient funds"));

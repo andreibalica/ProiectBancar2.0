@@ -62,7 +62,6 @@ public final class SendMoneyStrategy implements TransactionStrategy {
 
         double commission = senderUser.getServicePlan()
                 .calculateCommission(amount, senderAccount.getCurrency());
-        commission = Math.round(commission * 100.0) / 100.0;
 
         Commerciant receiverCommerciant = GlobalManager.getGlobal().getBank()
                 .getCommerciant(receiver);
@@ -95,7 +94,7 @@ public final class SendMoneyStrategy implements TransactionStrategy {
             );
 
             if (cashback > 0) {
-                senderAccount.addAmount(Math.round(cashback * 100.0) / 100.0);
+                senderAccount.addAmount(cashback);
             }
 
             senderAccount.addTransactionHistory(
@@ -125,7 +124,6 @@ public final class SendMoneyStrategy implements TransactionStrategy {
             return false;
         }
 
-        convertedAmount = Math.round(convertedAmount * 100.0) / 100.0;
 
         if (senderAccount.getBalance() < amount + commission) {
             senderAccount.addTransactionHistory(

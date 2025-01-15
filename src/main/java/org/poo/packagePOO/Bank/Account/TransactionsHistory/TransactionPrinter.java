@@ -100,14 +100,31 @@ public final class TransactionPrinter implements TransactionVisitor {
 
         node.put("timestamp", transaction.getTimestamp());
         node.put("description", transaction.getDescription());
+
+        if (transaction.getSplitPaymentType() != null) {
+            node.put("splitPaymentType", transaction.getSplitPaymentType());
+        }
+
         node.put("currency", transaction.getCurrency());
-        node.put("amount", transaction.getSplitAmount());
 
         ArrayNode accountsArray = mapper.createArrayNode();
         for (String account : transaction.getInvolvedAccounts()) {
             accountsArray.add(account);
         }
         node.set("involvedAccounts", accountsArray);
+
+        if (transaction.getAmountForUsers() != null
+                && "custom".equals(transaction.getSplitPaymentType())) {
+            ArrayNode amountArray = mapper.createArrayNode();
+            for (Double amount : transaction.getAmountForUsers()) {
+                amountArray.add(amount);
+            }
+            node.set("amountForUsers", amountArray);
+        }
+
+        if ("equal".equals(transaction.getSplitPaymentType())) {
+            node.put("amount", transaction.getSplitAmount());
+        }
 
         if (transaction.getError() != null) {
             node.put("error", transaction.getError());
@@ -125,6 +142,7 @@ public final class TransactionPrinter implements TransactionVisitor {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("timestamp", transaction.getTimestamp());
+        node.put("currency", transaction.getCurrency());
         node.put("description", transaction.getDescription());
         node.put("amount", transaction.getAmount());
         output.add(node);

@@ -102,7 +102,10 @@ public final class CommandFactory {
                 new ArrayList<>(input.getAccounts()),
                 input.getTimestamp(),
                 input.getCurrency(),
-                input.getAmount()
+                input.getAmount(),
+                input.getAmountForUsers() != null ?
+                        new ArrayList<>(input.getAmountForUsers()) : null,
+                input.getSplitPaymentType()
         ));
 
         commandCreators.put("report", input -> new Report(
@@ -148,6 +151,16 @@ public final class CommandFactory {
                 input.getAmount(),
                 input.getEmail(),
                 input.getLocation(),
+                input.getTimestamp()
+        ));
+
+        commandCreators.put("acceptSplitPayment", input -> new AcceptSplitPayment(
+                input.getEmail(),
+                input.getTimestamp()
+        ));
+
+        commandCreators.put("rejectSplitPayment", input -> new RejectSplitPayment(
+                input.getEmail(),
                 input.getTimestamp()
         ));
     }

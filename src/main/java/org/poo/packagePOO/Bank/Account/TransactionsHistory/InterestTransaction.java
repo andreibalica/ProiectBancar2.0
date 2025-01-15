@@ -2,6 +2,7 @@ package org.poo.packagePOO.Bank.Account.TransactionsHistory;
 
 public final class InterestTransaction extends TransactionHistory {
     private final double amount;
+    private final String currency;
 
     /**
      *
@@ -10,9 +11,11 @@ public final class InterestTransaction extends TransactionHistory {
      * @param amount
      */
     public InterestTransaction(final int timestamp,
+                               final String currency,
                                final String description,
                                final double amount) {
         super(timestamp, description);
+        this.currency = currency;
         this.amount = amount;
     }
 
@@ -31,5 +34,9 @@ public final class InterestTransaction extends TransactionHistory {
      */
     public double getAmount() {
         return amount;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 }

@@ -11,7 +11,7 @@ import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-public class WithdrawSavingsStrategy implements TransactionStrategy{
+public class WithdrawSavingsStrategy implements TransactionStrategy {
     private final String account;
     private final double amount;
     private final String currency;
@@ -55,9 +55,14 @@ public class WithdrawSavingsStrategy implements TransactionStrategy{
             return false;
         }
 
-        classicAccount = GlobalManager.getGlobal().getBank().getClassicAccountEmailCurrency(savingsAccount.getEmail(),currency);
+        classicAccount = GlobalManager.getGlobal().getBank().getClassicAccountEmailCurrency(savingsAccount.getEmail(), currency);
         if (classicAccount == null) {
-            error = "You do not have a classic account";
+            savingsAccount.addTransactionHistory(
+                    TransactionFactory.createErrorTransaction(
+                            timestamp,
+                            "You do not have a classic account."
+                    )
+            );
             return false;
         }
 
@@ -66,7 +71,6 @@ public class WithdrawSavingsStrategy implements TransactionStrategy{
 
     @Override
     public boolean process() {
-
         double convertedAmount;
         try {
             convertedAmount = CurrencyConverter.getConverter()
@@ -114,5 +118,4 @@ public class WithdrawSavingsStrategy implements TransactionStrategy{
             return false;
         }
     }
-
 }

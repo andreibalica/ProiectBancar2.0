@@ -6,9 +6,7 @@ import org.poo.packagePOO.Command.Command;
 import org.poo.packagePOO.Command.CommandFactory;
 import org.poo.packagePOO.GlobalManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class Bank {
     private final CommandFactory commandFactory = new CommandFactory();
@@ -17,6 +15,33 @@ public final class Bank {
     private ArrayList<BankAccount> accounts = new ArrayList<>();
     private Map<String, Map<String, String>> aliases = new HashMap<>();
     private Map<String, Commerciant> commerciants = new HashMap<>();
+    private Map<String, Queue<SplitPaymentRequest>> pendingSplitPayments = new HashMap<>();
+
+    public void addPendingSplitPayment(SplitPaymentRequest request) {
+        for (String account : request.getAccounts()) {
+            BankAccount bankAccount = getAccountIBAN(account);
+            if (bankAccount != null) {
+                String email = bankAccount.getEmail();
+                pendingSplitPayments.computeIfAbsent(email, k -> new LinkedList<>())
+                        .add(request);
+            }
+        }
+    }
+
+    public SplitPaymentRequest getNextPendingSplitPayment(String email) {
+        Queue<SplitPaymentRequest> requests = pendingSplitPayments.get(email);
+        if (requests == null || requests.isEmpty()) {
+            return null;
+        }
+        return requests.peek();
+    }
+
+    public void removePendingSplitPayment(String email) {
+        Queue<SplitPaymentRequest> requests = pendingSplitPayments.get(email);
+        if (requests != null && !requests.isEmpty()) {
+            requests.poll();
+        }
+    }
 
     /**
      *
