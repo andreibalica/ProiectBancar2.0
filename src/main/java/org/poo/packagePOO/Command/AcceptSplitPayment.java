@@ -11,12 +11,19 @@ public class AcceptSplitPayment implements Command {
     private final String email;
     private final int timestamp;
 
-    public AcceptSplitPayment(String email, int timestamp) {
+    /**
+     * @param email
+     * @param timestamp
+     */
+    public AcceptSplitPayment(final String email, final int timestamp) {
         this.email = email;
         this.timestamp = timestamp;
         this.strategy = new AcceptSplitPaymentStrategy(email, timestamp);
     }
 
+    /**
+     * @return
+     */
     @Override
     public void execute() {
         if ((!strategy.validate() || !strategy.process()) && strategy.getError() != null) {

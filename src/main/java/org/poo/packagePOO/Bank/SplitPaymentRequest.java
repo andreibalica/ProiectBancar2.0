@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SplitPaymentRequest {
+public final class SplitPaymentRequest {
     private final ArrayList<String> accounts;
     private final double amount;
     private final String currency;
@@ -14,9 +14,21 @@ public class SplitPaymentRequest {
     private final int timestamp;
     private boolean isRejected;
 
-    public SplitPaymentRequest(ArrayList<String> accounts, double amount,
-                               String currency, ArrayList<Double> amountForUsers,
-                               String splitPaymentType, int timestamp) {
+    /**
+     *
+     * @param accounts
+     * @param amount
+     * @param currency
+     * @param amountForUsers
+     * @param splitPaymentType
+     * @param timestamp
+     */
+    public SplitPaymentRequest(final ArrayList<String> accounts,
+                               final double amount,
+                               final String currency,
+                               final ArrayList<Double> amountForUsers,
+                               final String splitPaymentType,
+                               final int timestamp) {
         this.accounts = accounts;
         this.amount = amount;
         this.currency = currency;
@@ -27,27 +39,90 @@ public class SplitPaymentRequest {
         this.isRejected = false;
     }
 
-    public void addAcceptance(String email) {
+    /**
+     *
+     * @param email
+     */
+    public void addAcceptance(final String email) {
         acceptedBy.add(email);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isFullyAccepted() {
         return acceptedBy.size() == accounts.size();
     }
 
+    /**
+     *
+     */
     public void reject() {
         this.isRejected = true;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isRejected() {
         return isRejected;
     }
 
-    public ArrayList<String> getAccounts() { return accounts; }
-    public double getAmount() { return amount; }
-    public String getCurrency() { return currency; }
-    public ArrayList<Double> getAmountForUsers() { return amountForUsers; }
-    public String getSplitPaymentType() { return splitPaymentType; }
-    public int getTimestamp() { return timestamp; }
-    public int getAcceptanceCount() { return acceptedBy.size(); }
+    /**
+     *
+     * @return
+     */
+    public ArrayList<String> getAccounts() {
+        return accounts;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public double getAmount() {
+        return amount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getCurrency() {
+        return currency;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Double> getAmountForUsers() {
+        return amountForUsers;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getSplitPaymentType() {
+        return splitPaymentType;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getAcceptanceCount() {
+        return acceptedBy.size();
+    }
 }

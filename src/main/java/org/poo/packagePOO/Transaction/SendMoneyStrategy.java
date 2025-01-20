@@ -15,6 +15,13 @@ public final class SendMoneyStrategy implements TransactionStrategy {
     private final int timestamp;
     private String error;
 
+    /**
+     * @param sender
+     * @param amount
+     * @param receiver
+     * @param description
+     * @param timestamp
+     */
     public SendMoneyStrategy(final String sender, final double amount,
                              final String receiver, final String description,
                              final int timestamp) {
@@ -25,6 +32,10 @@ public final class SendMoneyStrategy implements TransactionStrategy {
         this.timestamp = timestamp;
     }
 
+
+    /**
+     * @return
+     */
     @Override
     public boolean validate() {
         if (receiver == null || receiver.trim().isEmpty()) {
@@ -53,6 +64,9 @@ public final class SendMoneyStrategy implements TransactionStrategy {
         return true;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean process() {
         BankAccount senderAccount = GlobalManager.getGlobal().getBank()
@@ -168,6 +182,9 @@ public final class SendMoneyStrategy implements TransactionStrategy {
         return true;
     }
 
+    /**
+     * @return
+     */
     @Override
     public String getError() {
         return error;

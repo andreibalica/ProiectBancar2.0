@@ -140,6 +140,15 @@ public final class TransactionFactory {
         return new InterestRateTransaction(timestamp, description, newRate);
     }
 
+    /**
+     *
+     * @param timestamp
+     * @param account
+     * @param amount
+     * @param currency
+     * @param error
+     * @return
+     */
     public static TransactionHistory createWithdrawSavingsTransaction(final int timestamp,
                                                                       final String account,
                                                                       final double amount,
@@ -148,6 +157,13 @@ public final class TransactionFactory {
         return new WithdrawSavingsTransaction(timestamp, account, amount, currency, error);
     }
 
+    /**
+     *
+     * @param timestamp
+     * @param accountIBAN
+     * @param newPlanType
+     * @return
+     */
     public static TransactionHistory createUpgradePlanTransaction(
             final int timestamp,
             final String accountIBAN,
@@ -156,6 +172,12 @@ public final class TransactionFactory {
         return new UpgradePlanTransaction(timestamp, description, accountIBAN, newPlanType);
     }
 
+    /**
+     *
+     * @param timestamp
+     * @param amount
+     * @return
+     */
     public static TransactionHistory createCashWithdrawalTransaction(final int timestamp,
                                                                      final double amount) {
         return new CashWithdrawalTransaction(timestamp, amount);

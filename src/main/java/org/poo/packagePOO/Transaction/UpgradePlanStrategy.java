@@ -1,7 +1,11 @@
 package org.poo.packagePOO.Transaction;
 
 import org.poo.packagePOO.Bank.Account.BankAccount;
-import org.poo.packagePOO.Bank.Account.ServicePlan.*;
+import org.poo.packagePOO.Bank.Account.ServicePlan.GoldPlan;
+import org.poo.packagePOO.Bank.Account.ServicePlan.ServicePlan;
+import org.poo.packagePOO.Bank.Account.ServicePlan.SilverPlan;
+import org.poo.packagePOO.Bank.Account.ServicePlan.StandardPlan;
+import org.poo.packagePOO.Bank.Account.ServicePlan.StudentPlan;
 import org.poo.packagePOO.Bank.Account.TransactionsHistory.TransactionFactory;
 import org.poo.packagePOO.Bank.Bank;
 import org.poo.packagePOO.Bank.User;
@@ -14,12 +18,22 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
     private final int timestamp;
     private String error;
 
-    public UpgradePlanStrategy(String accountIBAN, String newPlanType, int timestamp) {
+    /**
+     * @param accountIBAN
+     * @param newPlanType
+     * @param timestamp
+     */
+    public UpgradePlanStrategy(final String accountIBAN,
+                               final String newPlanType,
+                               final int timestamp) {
         this.accountIBAN = accountIBAN;
         this.newPlanType = newPlanType;
         this.timestamp = timestamp;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean validate() {
         Bank bank = GlobalManager.getGlobal().getBank();
@@ -30,45 +44,18 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
             return false;
         }
 
-        for (User user : bank.getUsers()) {
-            if (user.getEmail().equals(account.getEmail())) {
-                ServicePlan currentPlan = user.getServicePlan();
-
-                if (currentPlan.getPlanType().equals(newPlanType)) {
-                    error = "The user already has the " + newPlanType + " plan.";
-                    return false;
-                }
-
-                double upgradeFee = currentPlan.getUpgradeFee(newPlanType);
-                if (upgradeFee == 0) {
-                    error = "You cannot downgrade your plan.";
-                    return false;
-                }
-
-                double convertedFee = upgradeFee;
-                if (!account.getCurrency().equals("RON")) {
-                    try {
-                        convertedFee = CurrencyConverter.getConverter()
-                                .convert("RON", account.getCurrency(), upgradeFee);
-                    } catch (IllegalArgumentException e) {
-                        error = "Currency conversion error";
-                        return false;
-                    }
-                }
-
-                if (account.getBalance() < convertedFee) {
-                    error = "Insufficient funds";
-                    return false;
-                }
-
-                return true;
-            }
+        User user = bank.getUserEmail(account.getEmail());
+        if (user == null) {
+            error = "User not found";
+            return false;
         }
 
-        error = "User not found";
-        return false;
+        return true;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean process() {
         Bank bank = GlobalManager.getGlobal().getBank();
@@ -77,12 +64,48 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
         for (User user : bank.getUsers()) {
             if (user.getEmail().equals(account.getEmail())) {
                 ServicePlan currentPlan = user.getServicePlan();
+                String currentPlanType = currentPlan.getPlanType();
+
+                if (currentPlanType.equals(newPlanType)) {
+                    account.addTransactionHistory(
+                            TransactionFactory.createErrorTransaction(
+                                    timestamp,
+                                    "The user already has the " + newPlanType + " plan."
+                            )
+                    );
+                    return false;
+                }
+
+                if (currentPlanType.equals("gold")
+                        || (currentPlanType.equals("silver") && !newPlanType.equals("gold"))
+                        || ((currentPlanType.equals("student")
+                        || currentPlanType.equals("standard"))
+                        && (newPlanType.equals("student")
+                        || newPlanType.equals("standard")))) {
+                    account.addTransactionHistory(
+                            TransactionFactory.createErrorTransaction(
+                                    timestamp,
+                                    "You cannot downgrade your plan."
+                            )
+                    );
+                    return false;
+                }
+
                 double upgradeFee = currentPlan.getUpgradeFee(newPlanType);
 
-                double convertedFee = upgradeFee;
                 if (!account.getCurrency().equals("RON")) {
-                    convertedFee = CurrencyConverter.getConverter()
+                    upgradeFee = CurrencyConverter.getConverter()
                             .convert("RON", account.getCurrency(), upgradeFee);
+                }
+
+                if (account.getBalance() < upgradeFee) {
+                    account.addTransactionHistory(
+                            TransactionFactory.createErrorTransaction(
+                                    timestamp,
+                                    "Insufficient funds"
+                            )
+                    );
+                    return false;
                 }
 
                 ServicePlan newPlan;
@@ -99,9 +122,9 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
                     default:
                         newPlan = new StandardPlan();
                 }
-                user.setServicePlan(newPlan);
 
-                account.payAmount(convertedFee);
+                user.setServicePlan(newPlan);
+                account.payAmount(upgradeFee);
 
                 account.addTransactionHistory(
                         TransactionFactory.createUpgradePlanTransaction(
@@ -117,6 +140,9 @@ public final class UpgradePlanStrategy implements TransactionStrategy {
         return false;
     }
 
+    /**
+     * @return
+     */
     @Override
     public String getError() {
         return error;

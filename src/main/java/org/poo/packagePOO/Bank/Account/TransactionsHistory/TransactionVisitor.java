@@ -49,9 +49,21 @@ public interface TransactionVisitor {
      */
     void visit(InterestRateTransaction transaction);
 
+    /**
+     *
+     * @param transaction
+     */
     void visit(WithdrawSavingsTransaction transaction);
 
+    /**
+     *
+     * @param transaction
+     */
     void visit(UpgradePlanTransaction transaction);
 
+    /**
+     *
+     * @param transaction
+     */
     void visit(CashWithdrawalTransaction transaction);
 }

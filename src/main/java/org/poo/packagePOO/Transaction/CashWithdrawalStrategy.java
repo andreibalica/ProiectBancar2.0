@@ -16,6 +16,13 @@ public class CashWithdrawalStrategy implements TransactionStrategy {
     private String error;
     private BankAccount account;
 
+    /**
+     * @param cardNumber
+     * @param amount
+     * @param email
+     * @param location
+     * @param timestamp
+     */
     public CashWithdrawalStrategy(final String cardNumber,
                                   final double amount,
                                   final String email,
@@ -28,6 +35,9 @@ public class CashWithdrawalStrategy implements TransactionStrategy {
         this.timestamp = timestamp;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean validate() {
         account = GlobalManager.getGlobal().getBank().getAccountCard(cardNumber);
@@ -51,6 +61,9 @@ public class CashWithdrawalStrategy implements TransactionStrategy {
         return true;
     }
 
+    /**
+     * @return
+     */
     @Override
     public boolean process() {
         User user = GlobalManager.getGlobal().getBank().getUserEmail(email);
@@ -83,6 +96,9 @@ public class CashWithdrawalStrategy implements TransactionStrategy {
         return true;
     }
 
+    /**
+     * @return
+     */
     @Override
     public String getError() {
         return error;

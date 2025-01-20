@@ -14,6 +14,13 @@ public class CashWithdrawal implements Command {
     private final int timestamp;
     private final TransactionStrategy strategy;
 
+    /**
+     * @param cardNumber
+     * @param amount
+     * @param email
+     * @param location
+     * @param timestamp
+     */
     public CashWithdrawal(final String cardNumber,
                           final double amount,
                           final String email,
@@ -27,6 +34,9 @@ public class CashWithdrawal implements Command {
         this.strategy = new CashWithdrawalStrategy(cardNumber, amount, email, location, timestamp);
     }
 
+    /**
+     * @return
+     */
     @Override
     public void execute() {
         if ((!strategy.validate() || !strategy.process()) && strategy.getError() != null) {

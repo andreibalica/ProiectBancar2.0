@@ -1,25 +1,39 @@
 package org.poo.packagePOO.Bank.Account.ServicePlan;
 
-import org.poo.packagePOO.CurrencyConverter;
+public final class StandardPlan implements ServicePlan {
+    private static final double COMMISSION_RATE = 0.002;
+    private static final double SILVER_UPGRADE_FEE = 100.0;
+    private static final double GOLD_UPGRADE_FEE = 350.0;
 
-public class StandardPlan implements ServicePlan {
+    /**
+     * @param amount
+     * @param currency
+     * @return
+     */
     @Override
-    public double calculateCommission(double amount, String currency) {
-        return amount * 0.002;
+    public double calculateCommission(final double amount, final String currency) {
+        return amount * COMMISSION_RATE;
     }
 
+    /**
+     * @return
+     */
     @Override
     public String getPlanType() {
         return "standard";
     }
 
+    /**
+     * @param targetPlan
+     * @return
+     */
     @Override
     public double getUpgradeFee(final String targetPlan) {
         switch (targetPlan) {
             case "silver":
-                return 100.0;
+                return SILVER_UPGRADE_FEE;
             case "gold":
-                return 350.0;
+                return GOLD_UPGRADE_FEE;
             default:
                 return 0.0;
         }

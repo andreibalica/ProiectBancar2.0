@@ -83,7 +83,7 @@ public class User {
         return servicePlan;
     }
 
-    public void setServicePlan(ServicePlan newPlan) {
+    public void setServicePlan(final ServicePlan newPlan) {
         this.servicePlan = newPlan;
     }
 }

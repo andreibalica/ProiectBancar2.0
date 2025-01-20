@@ -10,6 +10,15 @@ public final class SplitPaymentsTransaction extends TransactionHistory {
     private final String splitPaymentType;
     private final ArrayList<Double> amountForUsers;
 
+    /**
+     * @param timestamp
+     * @param totalAmount
+     * @param currency
+     * @param accounts
+     * @param error
+     * @param splitPaymentType
+     * @param amountForUsers
+     */
     public SplitPaymentsTransaction(final int timestamp,
                                     final double totalAmount,
                                     final String currency,
@@ -35,30 +44,51 @@ public final class SplitPaymentsTransaction extends TransactionHistory {
         }
     }
 
+    /**
+     * @return
+     */
     public double getTotalAmount() {
         return totalAmount;
     }
 
+    /**
+     * @return
+     */
     public String getCurrency() {
         return currency;
     }
 
+    /**
+     * @return
+     */
     public ArrayList<String> getInvolvedAccounts() {
         return involvedAccounts;
     }
 
+    /**
+     * @return
+     */
     public String getError() {
         return error;
     }
 
+    /**
+     * @return
+     */
     public String getSplitPaymentType() {
         return splitPaymentType;
     }
 
+    /**
+     * @return
+     */
     public ArrayList<Double> getAmountForUsers() {
         return amountForUsers;
     }
 
+    /**
+     * @return
+     */
     public double getSplitAmount() {
         if ("equal".equals(splitPaymentType)) {
             return totalAmount / involvedAccounts.size();
@@ -66,6 +96,9 @@ public final class SplitPaymentsTransaction extends TransactionHistory {
         return amountForUsers != null ? amountForUsers.get(0) : 0.0;
     }
 
+    /**
+     * @param visitor
+     */
     @Override
     public void accept(final TransactionVisitor visitor) {
         visitor.visit(this);

@@ -5,30 +5,44 @@ import org.poo.packagePOO.Bank.Account.BankAccount;
 import org.poo.packagePOO.Command.Command;
 import org.poo.packagePOO.Command.CommandFactory;
 import org.poo.packagePOO.GlobalManager;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 public final class Bank {
     private final CommandFactory commandFactory = new CommandFactory();
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
-    private ArrayList<BankAccount> accounts = new ArrayList<>();
-    private Map<String, Map<String, String>> aliases = new HashMap<>();
-    private Map<String, Commerciant> commerciants = new HashMap<>();
-    private Map<String, Queue<SplitPaymentRequest>> pendingSplitPayments = new HashMap<>();
+    private final ArrayList<User> users = new ArrayList<>();
+    private final ArrayList<ExchangeRate> exchangeRates = new ArrayList<>();
+    private final ArrayList<BankAccount> accounts = new ArrayList<>();
+    private final Map<String, Map<String, String>> aliases = new HashMap<>();
+    private final Map<String, Commerciant> commerciants = new HashMap<>();
+    private final Map<String, Queue<SplitPaymentRequest>> pendingSplitPayments
+            = new HashMap<>();
 
-    public void addPendingSplitPayment(SplitPaymentRequest request) {
+    /**
+     *
+     * @param request
+     */
+    public void addPendingSplitPayment(final SplitPaymentRequest request) {
         for (String account : request.getAccounts()) {
             BankAccount bankAccount = getAccountIBAN(account);
             if (bankAccount != null) {
                 String email = bankAccount.getEmail();
-                pendingSplitPayments.computeIfAbsent(email, k -> new LinkedList<>())
-                        .add(request);
+                pendingSplitPayments.computeIfAbsent(email,
+                        k -> new LinkedList<>()).add(request);
             }
         }
     }
 
-    public SplitPaymentRequest getNextPendingSplitPayment(String email) {
+    /**
+     *
+     * @param email
+     * @return
+     */
+    public SplitPaymentRequest getNextPendingSplitPayment(final String email) {
         Queue<SplitPaymentRequest> requests = pendingSplitPayments.get(email);
         if (requests == null || requests.isEmpty()) {
             return null;
@@ -36,7 +50,11 @@ public final class Bank {
         return requests.peek();
     }
 
-    public void removePendingSplitPayment(String email) {
+    /**
+     *
+     * @param email
+     */
+    public void removePendingSplitPayment(final String email) {
         Queue<SplitPaymentRequest> requests = pendingSplitPayments.get(email);
         if (requests != null && !requests.isEmpty()) {
             requests.poll();
@@ -73,8 +91,10 @@ public final class Bank {
      */
     public void addUsersFromInput(final UserInput[] inputs) {
         for (UserInput input : inputs) {
-            users.add(new User(input.getFirstName(), input.getLastName(),
-                    input.getEmail(), input.getBirthDate(),
+            users.add(new User(input.getFirstName(),
+                    input.getLastName(),
+                    input.getEmail(),
+                    input.getBirthDate(),
                     input.getOccupation()));
         }
     }
@@ -86,7 +106,8 @@ public final class Bank {
     public void addExchangeRatesFromInput(final ExchangeInput[] rates) {
         for (ExchangeInput rate : rates) {
             exchangeRates.add(new ExchangeRate(rate.getFrom(),
-                    rate.getTo(), rate.getRate()));
+                    rate.getTo(),
+                    rate.getRate()));
         }
     }
 
@@ -96,8 +117,10 @@ public final class Bank {
      */
     public void initializeBank(final ObjectInput inputData) {
         GlobalManager.getGlobal().getBank().addUsersFromInput(inputData.getUsers());
-        GlobalManager.getGlobal().getBank().addExchangeRatesFromInput(inputData.getExchangeRates());
-        GlobalManager.getGlobal().getBank().addCommerciantsFromInput(inputData.getCommerciants());
+        GlobalManager.getGlobal().getBank()
+                .addExchangeRatesFromInput(inputData.getExchangeRates());
+        GlobalManager.getGlobal().getBank()
+                .addCommerciantsFromInput(inputData.getCommerciants());
     }
 
     /**
@@ -144,8 +167,12 @@ public final class Bank {
         return null;
     }
 
-    public User getUserEmail(String email) {
-        ArrayList<User> users = getUsers();
+    /**
+     *
+     * @param email
+     * @return
+     */
+    public User getUserEmail(final String email) {
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 return user;
@@ -177,27 +204,46 @@ public final class Bank {
         }
     }
 
-    public BankAccount getClassicAccountEmailCurrency(String email, String currency) {
-        ArrayList<BankAccount> accounts = GlobalManager.getGlobal().getBank().getAccounts();
+    /**
+     *
+     * @param email
+     * @param currency
+     * @return
+     */
+    public BankAccount getClassicAccountEmailCurrency(final String email,
+                                                      final String currency) {
         for (BankAccount account : accounts) {
-            if (account.getEmail().equals(email) &&
-                    account.getAccountType().equals("classic") &&
-                    account.getCurrency().equals(currency)) {
+            if (account.getEmail().equals(email)
+                    && account.getAccountType().equals("classic")
+                    && account.getCurrency().equals(currency)) {
                 return account;
             }
         }
         return null;
     }
 
-    public void addCommerciant(Commerciant commerciant) {
+    /**
+     *
+     * @param commerciant
+     */
+    public void addCommerciant(final Commerciant commerciant) {
         commerciants.put(commerciant.getName(), commerciant);
     }
 
-    public Commerciant getCommerciant(String name) {
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public Commerciant getCommerciant(final String name) {
         return commerciants.get(name);
     }
 
-    public void addCommerciantsFromInput(CommerciantInput[] inputs) {
+    /**
+     *
+     * @param inputs
+     */
+    public void addCommerciantsFromInput(final CommerciantInput[] inputs) {
         for (CommerciantInput input : inputs) {
             commerciants.put(input.getCommerciant(),
                     new Commerciant(

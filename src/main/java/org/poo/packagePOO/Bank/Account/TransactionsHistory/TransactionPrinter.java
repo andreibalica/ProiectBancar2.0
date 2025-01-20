@@ -161,6 +161,10 @@ public final class TransactionPrinter implements TransactionVisitor {
         output.add(node);
     }
 
+    /**
+     *
+     * @param transaction
+     */
     @Override
     public void visit(final WithdrawSavingsTransaction transaction) {
         ObjectMapper mapper = new ObjectMapper();
@@ -181,6 +185,10 @@ public final class TransactionPrinter implements TransactionVisitor {
         output.add(node);
     }
 
+    /**
+     *
+     * @param transaction
+     */
     @Override
     public void visit(final UpgradePlanTransaction transaction) {
         ObjectMapper mapper = new ObjectMapper();
@@ -194,6 +202,10 @@ public final class TransactionPrinter implements TransactionVisitor {
         output.add(node);
     }
 
+    /**
+     *
+     * @param transaction
+     */
     @Override
     public void visit(final CashWithdrawalTransaction transaction) {
         ObjectMapper mapper = new ObjectMapper();
@@ -205,5 +217,4 @@ public final class TransactionPrinter implements TransactionVisitor {
 
         output.add(node);
     }
-
 }

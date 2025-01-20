@@ -159,10 +159,6 @@ public final class CommandFactory {
                 input.getTimestamp()
         ));
 
-        commandCreators.put("rejectSplitPayment", input -> new RejectSplitPayment(
-                input.getEmail(),
-                input.getTimestamp()
-        ));
     }
 
     /**

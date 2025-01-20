@@ -12,7 +12,7 @@ public class UpgradePlan implements Command {
     private final String newPlanType;
     private final int timestamp;
 
-    public UpgradePlan(String account, String newPlanType, int timestamp) {
+    public UpgradePlan(final String account, final String newPlanType, final int timestamp) {
         this.account = account;
         this.newPlanType = newPlanType;
         this.timestamp = timestamp;
@@ -27,7 +27,7 @@ public class UpgradePlan implements Command {
             ObjectNode output = mapper.createObjectNode();
 
             response.put("command", "upgradePlan");
-            output.put("error", strategy.getError());
+            output.put("description", strategy.getError());
             output.put("timestamp", timestamp);
             response.set("output", output);
             response.put("timestamp", timestamp);
